@@ -1,0 +1,8 @@
+{
+    "max-instances": "1",
+    "uuid": "polarclock@veprogames",
+    "name": "Polar Clock",
+    "description": "WIP",
+    "version": "0.1",
+    "prevent-decorations": true
+}
