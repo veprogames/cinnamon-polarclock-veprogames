@@ -2,7 +2,7 @@
     "max-instances": "1",
     "uuid": "polarclock@veprogames",
     "name": "Polar Clock",
-    "description": "WIP",
+    "description": "Display A Polar Clock on your Cinnamon Desktop with Second, Minute, Hour, DayOfMonth and MonthOfYear Circles",
     "version": "0.1",
     "prevent-decorations": true
 }

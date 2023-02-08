@@ -53,9 +53,10 @@ function PolarClockDesklet(metadata, deskletId) {
 
             const data = [time.get_second(), time.get_minute(), time.get_hour(), time.get_day_of_month(), time.get_month()];
             const degrees = [data[0] / 60, data[1] / 60, data[2] / 24, data[3] / 30, data[4] / 12];
+            const baseColor = [134 / 256, 190 / 256, 67 / 255];
 
             for(let i = 0; i < 5; i++){
-                ctx.setSourceRGBA(i * 0.2, 1, 1 - i * 0.2, 1);
+                ctx.setSourceRGBA(baseColor[0], baseColor[1] + 0.2 * i, baseColor[2] + 0.2 * i, 1);
                 ctx.arc(0, 0, 0.2 + 0.3 * i / 5, -0.5 * Math.PI, degrees[i] * 2 * Math.PI - 0.5 * Math.PI);
                 ctx.stroke();
             }
