@@ -22,11 +22,6 @@ function PolarClockDesklet(metadata, deskletId) {
     this.setup = function(){
         this.window = new Clutter.Actor();
 
-        this.text_year = new St.Label({text: "2023"});
-        this.text_year.style = "font-size: 250%; font-weight: black; color: white;";
-        this.text_year.set_position(W / 2, H / 2);
-
-        this.window.add_actor(this.text_year);
         this.setContent(this.window);
 
         this.update();
@@ -51,7 +46,7 @@ function PolarClockDesklet(metadata, deskletId) {
             ctx.scale(W, H);
             ctx.translate(.5, .5);
 
-            ctx.setLineWidth(0.03);
+            ctx.setLineWidth(0.042);
             ctx.setLineCap(Cairo.LineCap.ROUND);
 
 		    const time = new GLib.DateTime();
@@ -60,10 +55,8 @@ function PolarClockDesklet(metadata, deskletId) {
             const degrees = [data[0] / 60, data[1] / 60, data[2] / 24, data[3] / 30, data[4] / 12];
 
             for(let i = 0; i < 5; i++){
-                ctx.setSourceRGBA(i * 0.125, 1, 0, 1);
-                //ctx.newSubPath();
-                ctx.arc(0, 0, 0.2 + 0.3 * i / 8, -0.5 * Math.PI, degrees[i] * 2 * Math.PI - 0.5 * Math.PI);
-                //ctx.closePath();
+                ctx.setSourceRGBA(i * 0.2, 1, 1 - i * 0.2, 1);
+                ctx.arc(0, 0, 0.2 + 0.3 * i / 5, -0.5 * Math.PI, degrees[i] * 2 * Math.PI - 0.5 * Math.PI);
                 ctx.stroke();
             }
 
