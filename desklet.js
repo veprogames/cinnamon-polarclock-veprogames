@@ -61,6 +61,18 @@ function PolarClockDesklet(metadata, deskletId) {
                 ctx.stroke();
             }
 
+            ctx.setSourceRGBA(1, 1, 1, 1);
+            ctx.moveTo(-0.13, -0.02);
+            ctx.setFontSize(0.1);
+            ctx.showText(time.get_year().toString());
+            ctx.setFontSize(0.045);
+            ctx.moveTo(-0.13, 0.04);
+            // month-day
+            ctx.showText([data[4], data[3]].map(t => t.toString().padStart(2, "0")).join("-"));
+            ctx.moveTo(-0.13, 0.08);
+            // hour:minute:second
+            ctx.showText([data[2], data[1], data[0]].map(t => t.toString().padStart(2, "0")).join(":"));
+
             return false;
         });
 
