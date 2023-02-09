@@ -3,6 +3,6 @@
     "uuid": "polarclock@veprogames",
     "name": "Polar Clock",
     "description": "Display A Polar Clock on your Cinnamon Desktop with Second, Minute, Hour, DayOfMonth and MonthOfYear Circles",
-    "version": "0.1",
+    "version": "0.2",
     "prevent-decorations": true
 }

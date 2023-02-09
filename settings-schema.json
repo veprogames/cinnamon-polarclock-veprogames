@@ -1,0 +1,20 @@
+{
+    "head0": {
+        "type": "header",
+        "description": "Settings for polarclock@veprogames"
+    },
+    "desklet-scale": {
+        "type": "spinbutton",
+        "default": 1,
+        "min": 0.3,
+        "max": 2,
+        "step": 0.1,
+        "description": "Scale of the desklet"
+    },
+    "color-second": {
+        "type": "colorchooser",
+        "default": "rgba(134, 190, 64, 1)",
+        "description": "Color for the 1st Circle (Second)",
+        "tooltip": "RGB"
+    }
+}
