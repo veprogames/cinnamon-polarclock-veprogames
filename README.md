@@ -1,7 +1,8 @@
 # Polar Clock Cinnamon Desklet
 
 Display A Polar Clock on your Cinnamon Desktop with Second, Minute, Hour, DayOfMonth and MonthOfYear Circles.
-Not Finished.
+
+You can configure almost every aspect of this Desklet: The Circle Colors, the Text Colors and what Texts should be shown. You can also scale the Desklet for good use on very small or very large screens.
 
 ## Installation
 

@@ -22,7 +22,7 @@
     },
     "gradient-r": {
         "type": "spinbutton",
-        "default": 0.0,
+        "default": 0.15,
         "min": -1,
         "max": 1,
         "step": 0.05,
@@ -30,7 +30,7 @@
     },
     "gradient-g": {
         "type": "spinbutton",
-        "default": 0.0,
+        "default": 0.05,
         "min": -1,
         "max": 1,
         "step": 0.05,
@@ -38,7 +38,7 @@
     },
     "gradient-b": {
         "type": "spinbutton",
-        "default": 0.0,
+        "default": -0.2,
         "min": -1,
         "max": 1,
         "step": 0.05,
