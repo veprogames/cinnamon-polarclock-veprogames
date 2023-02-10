@@ -89,13 +89,38 @@ function PolarClockDesklet(metadata, deskletId) {
         ]);
     }
 
+    this.daysInMonth = function(month, year){
+        switch (month) {
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                return 31;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                return 30;
+            case 2:
+                const isLeapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+                return isLeapYear ? 29 : 28;
+            default:
+                return 0;
+        }
+    }
+
     this.draw = function(){
         const W = BASE_W * this.settingDeskletScale;
         const H = BASE_H * this.settingDeskletScale;
         const canvas = new Clutter.Canvas();
         canvas.set_size(W, H);
 
+        const time = new GLib.DateTime();
         const colors = this.colors;
+        const daysInMonth = this.daysInMonth(time.get_month(), time.get_year());
 
         canvas.connect("draw", function(canvas, ctx, w, h) {
             ctx.save();
@@ -110,10 +135,8 @@ function PolarClockDesklet(metadata, deskletId) {
             ctx.setLineWidth(0.042);
             ctx.setLineCap(Cairo.LineCap.ROUND);
 
-		    const time = new GLib.DateTime();
-
             const data = [time.get_second(), time.get_minute(), time.get_hour(), time.get_day_of_month(), time.get_month()];
-            const degrees = [data[0] / 60, data[1] / 60, data[2] / 24, data[3] / 30, data[4] / 12];
+            const degrees = [data[0] / 60, data[1] / 60, data[2] / 24, data[3] / daysInMonth, data[4] / 12];
 
             for(let i = 0; i < 5; i++){
                 const r = colors[i][0];
