@@ -12,12 +12,16 @@ function PolarClockDesklet(metadata, deskletId) {
     const BASE_W = 512;
     const BASE_H = 512;
 
-    //date
+    // date
     this.date = [0, 0, 0, 0, 0, 0];
+
+    // cached colors
+    this.colors = [];
 
     this._init = function(metadata, deskletId) {
         Desklet.Desklet.prototype._init.call(this, metadata, deskletId);
         this.settings = this.initSettings(metadata, deskletId);
+        this.colors = this.getColors();
         this.setup();
     }
 
@@ -36,14 +40,28 @@ function PolarClockDesklet(metadata, deskletId) {
     }
 
     this.initSettings = function(metadata, deskletId){
+        const I = Settings.BindingDirection.IN;
+        const cb = this.onSettingChanged;
+
         const settings = new Settings.DeskletSettings(this, metadata.uuid, deskletId);
-        settings.bindProperty(Settings.BindingDirection.IN, "desklet-scale", "settingDeskletScale", this.onSettingChanged);
-        settings.bindProperty(Settings.BindingDirection.IN, "color-second", "settingColorSecond", this.onSettingChanged);
+        settings.bindProperty(I, "desklet-scale", "settingDeskletScale", cb);
+
+        settings.bindProperty(I, "gradient-enabled", "settingGradientEnabled", cb);
+        settings.bindProperty(I, "gradient-r", "settingGradientR", cb);
+        settings.bindProperty(I, "gradient-g", "settingGradientG", cb);
+        settings.bindProperty(I, "gradient-b", "settingGradientB", cb);
+
+        settings.bindProperty(I, "color-second", "settingColorSecond", cb);
+        settings.bindProperty(I, "color-minute", "settingColorMinute", cb);
+        settings.bindProperty(I, "color-hour", "settingColorHour", cb);
+        settings.bindProperty(I, "color-day", "settingColorDay", cb);
+        settings.bindProperty(I, "color-month", "settingColorMonth", cb);
         return settings;
     }
 
     this.onSettingChanged = function(){
         Mainloop.source_remove(this.timeout);
+        this.colors = this.getColors();
         this.update();
     }
 
@@ -52,13 +70,32 @@ function PolarClockDesklet(metadata, deskletId) {
         return value.replace(/rgb(a|)\(/, "").replace(")", "").split(",").map(str => parseInt(str.trim()) / 256);
     }
 
+    // return the colors of each circle as an array
+    this.getColors = function(){
+        const baseColor = this.parseColor(this.settingColorSecond);
+        if(!this.settingGradientEnabled){
+            return [
+                baseColor,
+                this.parseColor(this.settingColorMinute),
+                this.parseColor(this.settingColorHour),
+                this.parseColor(this.settingColorDay),
+                this.parseColor(this.settingColorMonth)
+            ]
+        }
+        return new Array(5).fill(0).map((v, idx) => [
+            baseColor[0] + this.settingGradientR * idx,
+            baseColor[1] + this.settingGradientG * idx,
+            baseColor[2] + this.settingGradientB * idx
+        ]);
+    }
+
     this.draw = function(){
         const W = BASE_W * this.settingDeskletScale;
         const H = BASE_H * this.settingDeskletScale;
         const canvas = new Clutter.Canvas();
         canvas.set_size(W, H);
 
-        const baseColor = this.parseColor(this.settingColorSecond);
+        const colors = this.colors;
 
         canvas.connect("draw", function(canvas, ctx, w, h) {
             ctx.save();
@@ -77,10 +114,12 @@ function PolarClockDesklet(metadata, deskletId) {
 
             const data = [time.get_second(), time.get_minute(), time.get_hour(), time.get_day_of_month(), time.get_month()];
             const degrees = [data[0] / 60, data[1] / 60, data[2] / 24, data[3] / 30, data[4] / 12];
-            //const baseColor = [134 / 256, 190 / 256, 67 / 255];
 
             for(let i = 0; i < 5; i++){
-                ctx.setSourceRGBA(baseColor[0], baseColor[1] + 0.2 * i, baseColor[2] + 0.2 * i, 1);
+                const r = colors[i][0];
+                const g = colors[i][1];
+                const b = colors[i][2];
+                ctx.setSourceRGBA(r, g, b, 1);
                 ctx.arc(0, 0, 0.2 + 0.3 * i / 5, -0.5 * Math.PI, degrees[i] * 2 * Math.PI - 0.5 * Math.PI);
                 ctx.stroke();
             }
