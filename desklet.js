@@ -56,6 +56,14 @@ function PolarClockDesklet(metadata, deskletId) {
         settings.bindProperty(I, "color-hour", "settingColorHour", cb);
         settings.bindProperty(I, "color-day", "settingColorDay", cb);
         settings.bindProperty(I, "color-month", "settingColorMonth", cb);
+
+        settings.bindProperty(I, "text-year-enabled", "settingTextYearEnabled", cb);
+        settings.bindProperty(I, "text-date-enabled", "settingTextDateEnabled", cb);
+        settings.bindProperty(I, "text-time-enabled", "settingTextTimeEnabled", cb);
+
+        settings.bindProperty(I, "text-year-color", "settingTextYearColor", cb);
+        settings.bindProperty(I, "text-date-color", "settingTextDateColor", cb);
+        settings.bindProperty(I, "text-time-color", "settingTextTimeColor", cb);
         return settings;
     }
 
@@ -67,7 +75,9 @@ function PolarClockDesklet(metadata, deskletId) {
 
     // parse settings value
     this.parseColor = function(value){
-        return value.replace(/rgb(a|)\(/, "").replace(")", "").split(",").map(str => parseInt(str.trim()) / 256);
+        const values = value.replace(/rgb(a|)\(/, "").replace(")", "").split(",").map(str => parseFloat(str.trim()) / 256);
+        values[3] *= 256; // alpha already was in 0-1 range
+        return values;
     }
 
     // return the colors of each circle as an array
@@ -122,6 +132,14 @@ function PolarClockDesklet(metadata, deskletId) {
         const colors = this.colors;
         const daysInMonth = this.daysInMonth(time.get_month(), time.get_year());
 
+        const yearColor = this.parseColor(this.settingTextYearColor);
+        const dateColor = this.parseColor(this.settingTextDateColor);
+        const timeColor = this.parseColor(this.settingTextTimeColor);
+
+        const showYear = this.settingTextYearEnabled;
+        const showDate = this.settingTextDateEnabled;
+        const showTime = this.settingTextTimeEnabled;
+
         canvas.connect("draw", function(canvas, ctx, w, h) {
             ctx.save();
             ctx.setOperator(Cairo.Operator.CLEAR);
@@ -147,17 +165,28 @@ function PolarClockDesklet(metadata, deskletId) {
                 ctx.stroke();
             }
 
-            ctx.setSourceRGBA(1, 1, 1, 1);
-            ctx.moveTo(-0.13, -0.02);
+
             ctx.setFontSize(0.1);
-            ctx.showText(time.get_year().toString());
+
+            // year
+            if(showYear){
+                ctx.moveTo(-0.13, -0.02);
+                ctx.setSourceRGBA(yearColor[0], yearColor[1], yearColor[2], 1);
+                ctx.showText(time.get_year().toString());
+            }
             ctx.setFontSize(0.045);
-            ctx.moveTo(-0.13, 0.04);
             // month-day
-            ctx.showText([data[4], data[3]].map(t => t.toString().padStart(2, "0")).join("-"));
-            ctx.moveTo(-0.13, 0.08);
+            if(showDate){
+                ctx.moveTo(-0.13, 0.04);
+                ctx.setSourceRGBA(dateColor[0], dateColor[1], dateColor[2], 1);
+                ctx.showText([data[4], data[3]].map(t => t.toString().padStart(2, "0")).join("-"));
+            }
             // hour:minute:second
-            ctx.showText([data[2], data[1], data[0]].map(t => t.toString().padStart(2, "0")).join(":"));
+            if(showTime){
+                ctx.moveTo(-0.13, 0.08);
+                ctx.setSourceRGBA(timeColor[0], timeColor[1], timeColor[2], 1);
+                ctx.showText([data[2], data[1], data[0]].map(t => t.toString().padStart(2, "0")).join(":"));
+            }
 
             return false;
         });

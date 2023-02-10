@@ -18,7 +18,7 @@
     "gradient-enabled": {
         "type": "checkbox",
         "description": "If checked, use the gradient settings below and calculate colors based on the 'second' (innermost) color set",
-        "default": true
+        "default": false
     },
     "gradient-r": {
         "type": "spinbutton",
@@ -56,26 +56,63 @@
     },
     "color-minute": {
         "type": "colorchooser",
-        "default": "rgba(134, 210, 84, 1)",
+        "default": "rgba(134, 220, 104, 1)",
         "description": "Color for the 2nd Circle (Minute)",
         "tooltip": "RGB"
     },
     "color-hour": {
         "type": "colorchooser",
-        "default": "rgba(134, 230, 104, 1)",
+        "default": "rgba(134, 250, 144, 1)",
         "description": "Color for the 3rd Circle (Hour)",
         "tooltip": "RGB"
     },
     "color-day": {
         "type": "colorchooser",
-        "default": "rgba(134, 250, 124, 1)",
+        "default": "rgba(134, 255, 184, 1)",
         "description": "Color for the 4th Circle (Day of Month)",
         "tooltip": "RGB"
     },
     "color-month": {
         "type": "colorchooser",
-        "default": "rgba(134, 255, 144, 1)",
+        "default": "rgba(134, 255, 224, 1)",
         "description": "Color for the 5th Circle (Month of Year)",
+        "tooltip": "RGB"
+    },
+    "head3": {
+        "type": "header",
+        "description": "Text"
+    },
+    "text-year-enabled": {
+        "type": "checkbox",
+        "description": "Show the Year",
+        "default": true
+    },
+    "text-date-enabled": {
+        "type": "checkbox",
+        "description": "Show the Month and Day",
+        "default": true
+    },
+    "text-time-enabled": {
+        "type": "checkbox",
+        "description": "Show the Time of Day",
+        "default": true
+    },
+    "text-year-color": {
+        "type": "colorchooser",
+        "description": "Color of the Year Text",
+        "default": "rgba(255, 255, 255, 1)",
+        "tooltip": "RGB"
+    },
+    "text-date-color": {
+        "type": "colorchooser",
+        "description": "Color of the Month/Day Text",
+        "default": "rgba(255, 255, 255, 1)",
+        "tooltip": "RGB"
+    },
+    "text-time-color": {
+        "type": "colorchooser",
+        "description": "Color of the Time of Day Text",
+        "default": "rgba(255, 255, 255, 1)",
         "tooltip": "RGB"
     }
 }
