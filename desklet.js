@@ -36,7 +36,10 @@ function PolarClockDesklet(metadata, deskletId) {
     this.update = function () {
         this.draw();
 
-        this.timeout = Mainloop.timeout_add_seconds(1, Lang.bind(this, this.update))
+        const time = new GLib.DateTime();
+        // add 1ms since ~~ truncates (rounds down) to avoid landing at 999ms
+        const delay = ~~((1 - time.get_microsecond() / 1e6) * 1000) + 1;
+        this.timeout = Mainloop.timeout_add(delay, Lang.bind(this, this.update))
     }
 
     this.initSettings = function(metadata, deskletId){
@@ -128,7 +131,7 @@ function PolarClockDesklet(metadata, deskletId) {
         const canvas = new Clutter.Canvas();
         canvas.set_size(W, H);
 
-        let time = new GLib.DateTime();
+        const time = new GLib.DateTime();
         const colors = this.colors;
         const daysInMonth = this.daysInMonth(time.get_month(), time.get_year());
 
@@ -153,10 +156,6 @@ function PolarClockDesklet(metadata, deskletId) {
             ctx.setLineWidth(0.042);
             ctx.setLineCap(Cairo.LineCap.ROUND);
 
-            // round up, so some seconds aren't "skipped"
-            // (ticks might be at 1.0203 and 1.9987 seconds, resulting in the same second being displayed twice)
-            // add an extra microsecond to be sure it really won't round down to the previous second
-            time = time.add_seconds((1e6 - time.get_microsecond() + 1) / 1e6);
             const data = [time.get_second(), time.get_minute(), time.get_hour(), time.get_day_of_month(), time.get_month()];
             const degrees = [data[0] / 60, data[1] / 60, data[2] / 24, data[3] / daysInMonth, data[4] / 12];
 
